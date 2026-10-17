@@ -1,4 +1,4 @@
-
+HTML
 <!DOCTYPE html>
 <html lang="zh-CN" class="scroll-smooth">
 <head>
@@ -76,7 +76,13 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <!-- 管理员认证开关 -->
+                <button onclick="toggleAdminAuth()" id="admin-toggle-btn" class="text-xs font-mono px-3 py-1.5 bg-gray-900 border border-gray-700 text-gray-400 hover:text-white clip-corner-sm transition-all flex items-center space-x-1">
+                    <i class="fa-solid fa-user-shield text-orange-400"></i>
+                    <span id="admin-btn-text">管理员解锁</span>
+                </button>
+
                 <!-- 倒计时 -->
                 <div class="hidden md:flex flex-col items-end">
                     <span class="text-xs text-gray-400 font-mono">REGISTRATION DEADLINE</span>
@@ -90,7 +96,7 @@
         </div>
     </header>
 
-    <!-- 顶部快速导航栏 (Quick Jump Bar) -->
+    <!-- 顶部快速导航栏 -->
     <nav class="bg-[#0b0f19]/95 border-b border-gray-800 sticky top-20 z-40 backdrop-blur">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-center md:justify-start space-x-4 md:space-x-8 overflow-x-auto text-xs font-orbitron">
             <a href="#overview" class="text-gray-300 hover:text-[#FF4B1F] transition-colors flex items-center space-x-1.5 whitespace-nowrap">
@@ -222,7 +228,6 @@
 
             <!-- 战队卡片网格 -->
             <div id="teams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- 动态渲染 -->
                 <div class="col-span-full py-12 text-center text-gray-500 font-mono">
                     正在连接云端数据库同步战队数据...
                 </div>
@@ -270,22 +275,17 @@
                     </div>
                     <div class="space-y-2">
                         <label class="block text-xs font-orbitron text-gray-300">战队专属徽章图标选择 <span class="text-[#FF4B1F]">*</span></label>
-                        <!-- 20个纯图标选择器 -->
-                        <div id="badge-selector" class="grid grid-cols-10 gap-2 bg-black/40 p-2 clip-corner-sm border border-gray-800">
-                            <!-- 动态注入20个图标 -->
-                        </div>
+                        <div id="badge-selector" class="grid grid-cols-10 gap-2 bg-black/40 p-2 clip-corner-sm border border-gray-800"></div>
                         <input type="hidden" id="selected_badge" value="fa-shield-halved">
                     </div>
                 </div>
 
-                <!-- 队员 1 & 2 & 3 -->
+                <!-- 队员阵容配置 -->
                 <div class="space-y-4">
                     <h4 class="font-orbitron text-sm font-bold text-orange-400 border-l-4 border-[#FF4B1F] pl-3">
                         主力队员阵容配置 (含队长共3人必填)
                     </h4>
-                    <div id="players-container" class="space-y-4">
-                        <!-- 动态生成 3 个主力 + 1 个可选替补 -->
-                    </div>
+                    <div id="players-container" class="space-y-4"></div>
                 </div>
 
                 <!-- 提交按钮 -->
@@ -324,7 +324,6 @@
                 <div class="flex justify-between text-xs"><span class="text-gray-500">队长联系方式:</span><span id="modal-contact" class="text-white">--</span></div>
             </div>
             
-            <!-- 二维码设计区：包含本地绝对路径图片集成与高科技框体 -->
             <div class="relative group max-w-[180px] mx-auto">
                 <div class="bg-[#0b0f19] p-3 border-2 border-[#FF4B1F] clip-corner-sm shadow-lg shadow-orange-600/20">
                     <img 
@@ -347,15 +346,15 @@
     <!-- JavaScript 核心逻辑 -->
     <script>
         // ==========================================
-        // 1. Supabase 配置 (请填入您自己的项目信息)
+        // 1. 配置信息 (管理员密码预设为 admin123)
         // ==========================================
         const SUPABASE_URL = 'https://idnhrchopndckusywife.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_l2EhbnU2dZMmv9MB_Shc8w_jDfngtug';
+        const ADMIN_PASSWORD = 'xt123'; // 可自定义修改您的管理员密码
         
-        // 初始化 Supabase 客户端
+        let isAdmin = false; // 当前管理员登录状态
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 20个纯图标列表
         const badgeList = [
             'fa-shield-halved', 'fa-skull', 'fa-crow', 'fa-crosshairs', 'fa-bolt', 
             'fa-fire', 'fa-dragon', 'fa-ghost', 'fa-gamepad', 'fa-jet-fighter', 
@@ -363,34 +362,71 @@
             'fa-atom', 'fa-chess-rook', 'fa-hurricane', 'fa-shield-cat', 'fa-sun'
         ];
 
-        // 段位列表 (从菜鸟到猎杀)
         const rankList = [
-            '菜鸟 (Rookie)',
-            '青铜 (Bronze)',
-            '白银 (Silver)',
-            '黄金 (Gold)',
-            '白金 (Platinum)',
-            '钻石 (Diamond)',
-            '大师 (Master)',
-            'Apex 猎杀者 (Apex Predator)'
+            '菜鸟 (Rookie)', '青铜 (Bronze)', '白银 (Silver)', '黄金 (Gold)',
+            '白金 (Platinum)', '钻石 (Diamond)', '大师 (Master)', 'Apex 猎杀者 (Apex Predator)'
         ];
 
         let allTeams = [];
 
-        // 页面初始化
         document.addEventListener('DOMContentLoaded', () => {
             initBadgeSelector();
             initPlayerInputs();
             fetchTeams();
             setupRealtimeSubscription();
             
-            // 搜索框事件
             document.getElementById('search-input').addEventListener('input', (e) => {
                 renderTeams(e.target.value);
             });
         });
 
-        // 初始化徽章选择器 (纯图标)
+        // 切换/验证管理员身份
+        function toggleAdminAuth() {
+            if (isAdmin) {
+                isAdmin = false;
+                alert('已退出管理员模式。');
+            } else {
+                const pwd = prompt('请输入管理员口令：');
+                if (pwd === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    alert('验证成功！已开启管理员管理模式。');
+                } else if (pwd !== null) {
+                    alert('密码错误，无法启用管理员模式！');
+                }
+            }
+            updateAdminUI();
+            renderTeams(document.getElementById('search-input').value);
+        }
+
+        function updateAdminUI() {
+            const btnText = document.getElementById('admin-btn-text');
+            const btn = document.getElementById('admin-toggle-btn');
+            if (isAdmin) {
+                btnText.innerText = '管理员已解锁';
+                btn.className = 'text-xs font-mono px-3 py-1.5 bg-[#FF4B1F]/20 border border-[#FF4B1F] text-[#FF4B1F] clip-corner-sm transition-all flex items-center space-x-1';
+            } else {
+                btnText.innerText = '管理员解锁';
+                btn.className = 'text-xs font-mono px-3 py-1.5 bg-gray-900 border border-gray-700 text-gray-400 hover:text-white clip-corner-sm transition-all flex items-center space-x-1';
+            }
+        }
+
+        function checkAdminAccess() {
+            if (!isAdmin) {
+                const pwd = prompt('此操作需要管理员权限，请输入管理员口令：');
+                if (pwd === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    updateAdminUI();
+                    renderTeams(document.getElementById('search-input').value);
+                    return true;
+                } else {
+                    alert('密码错误，操作已取消。');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // 初始化徽章与队员输入
         function initBadgeSelector() {
             const container = document.getElementById('badge-selector');
             container.innerHTML = badgeList.map((badge, index) => `
@@ -412,7 +448,6 @@
             });
         }
 
-        // 初始化队员输入表单
         function initPlayerInputs() {
             const container = document.getElementById('players-container');
             let html = '';
@@ -432,7 +467,6 @@
                     </div>
                 `;
             }
-            // 可选替补
             html += `
                 <div class="pt-2">
                     <div class="flex items-center justify-between bg-black/40 p-3 clip-corner-sm border border-gray-800">
@@ -467,7 +501,7 @@
         }
 
         // ==========================================
-        // 3. Supabase 数据交互
+        // 2. 数据读写与删除
         // ==========================================
 
         async function fetchTeams() {
@@ -483,7 +517,7 @@
             }
 
             allTeams = data || [];
-            renderTeams();
+            renderTeams(document.getElementById('search-input').value);
             updateProgress();
         }
 
@@ -552,14 +586,17 @@
             initPlayerInputs();
         }
 
+        // 只有管理员能执行的删除操作
         async function deleteTeam(id) {
-            if(!confirm('确定要将该战队从大厅中移除吗？')) return;
+            if (!checkAdminAccess()) return;
+            if (!confirm('【管理员操作】确定要将该战队从大厅中移除吗？')) return;
+            
             const { error } = await supabaseClient
                 .from('apex_teams')
                 .delete()
                 .eq('id', id);
 
-            if(error) {
+            if (error) {
                 alert('删除失败: ' + error.message);
             } else {
                 fetchTeams();
@@ -567,13 +604,15 @@
         }
 
         async function handleAdminClear() {
-            if(!confirm('【危险操作】确定要一键清空所有已报名的战队信息吗？')) return;
+            if (!checkAdminAccess()) return;
+            if (!confirm('【高危管理员操作】确定要一键清空所有已报名的战队信息吗？')) return;
+            
             const { error } = await supabaseClient
                 .from('apex_teams')
                 .delete()
                 .neq('id', '00000000-0000-0000-0000-000000000000');
 
-            if(error) {
+            if (error) {
                 alert('清空失败: ' + error.message);
             } else {
                 alert('已成功清空所有报名数据！');
@@ -582,7 +621,8 @@
         }
 
         function handleAdminExport() {
-            if(allTeams.length === 0) {
+            if (!checkAdminAccess()) return;
+            if (allTeams.length === 0) {
                 alert('当前暂无战队数据可导出。');
                 return;
             }
@@ -602,10 +642,6 @@
             a.click();
         }
 
-        // ==========================================
-        // 4. UI 渲染与辅助函数
-        // ==========================================
-
         function renderTeams(filter = '') {
             const grid = document.getElementById('teams-grid');
             const filtered = allTeams.filter(t => {
@@ -615,7 +651,7 @@
                 return matchTeam || matchPlayer;
             });
 
-            if(filtered.length === 0) {
+            if (filtered.length === 0) {
                 grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 font-mono">暂无符合条件的战队</div>`;
                 return;
             }
@@ -633,9 +669,12 @@
                                     <span class="text-xs text-orange-400 font-mono font-bold">[${t.team_tag}]</span>
                                 </div>
                             </div>
-                            <button onclick="deleteTeam('${t.id}')" class="text-gray-600 hover:text-red-500 transition-colors p-2" title="删除战队">
-                                <i class="fa-solid fa-trash-can text-sm"></i>
-                            </button>
+                            <!-- 仅在解锁管理员身份时展示删除图标 -->
+                            ${isAdmin ? `
+                                <button onclick="deleteTeam('${t.id}')" class="text-red-400 hover:text-red-300 transition-colors p-2 bg-red-950/30 rounded border border-red-800/40" title="管理员删除战队">
+                                    <i class="fa-solid fa-trash-can text-xs mr-1"></i>删除
+                                </button>
+                            ` : ''}
                         </div>
 
                         <div class="space-y-2 mb-4">
