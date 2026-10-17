@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 APEX LEGENDS COMMUNITY COMPETITION - 民间娱乐赛</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            apex: {
+              red: '#FF4B1F',
+              crimson: '#E63946',
+              dark: '#0B0E14',
+              card: '#151922',
+              cardHover: '#1E2430',
+              border: '#2A3241',
+              accent: '#00F0FF',
+              gold: '#FFB800'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          boxShadow: {
+            'apex-glow': '0 0 25px rgba(255, 75, 31, 0.4)',
+            'cyan-glow': '0 0 20px rgba(0, 240, 255, 0.3)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Custom Styling & Sci-Fi Background effects */
+    body {
+      background-color: #0B0E14;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Cyber grid overlay */
+    .cyber-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Glow utilities */
+    .apex-gradient-text {
+      background: linear-gradient(135deg, #FF4B1F 0%, #FF8F00 50%, #00F0FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .clip-apex-btn {
+      clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    }
+
+    .clip-apex-card {
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0E14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2A3241;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF4B1F;
+    }
+
+    .glass-panel {
+      background: rgba(21, 25, 34, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="cyber-grid min-h-screen flex flex-col justify-between selection:bg-apex-red selection:text-white">
+
+  <!-- ================= HEADER / NAVBAR ================= -->
+  <header class="sticky top-0 z-40 w-full glass-panel border-b border-apex-border/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+        <div class="w-10 h-10 bg-apex-red flex items-center justify-center clip-apex-btn shadow-apex-glow">
+          <i class="fa-solid font-bold text-xl text-black fa-play transform -rotate-90"></i>
+        </div>
+        <div>
+          <span class="text-xl font-black tracking-wider text-white uppercase italic">2026 APEX<span class="text-apex-red">COMMUNITY</span></span>
+          <span class="block text-[10px] text-gray-400 font-mono tracking-widest uppercase">Community Competition</span>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold tracking-wide">
+        <a href="#overview" class="text-gray-300 hover:text-apex-red transition-colors flex items-center gap-2">
+          <i class="fa-solid fa-circle-info text-xs text-apex-red"></i> 赛事指南
+        </a>
+        <a href="#rules" class="text-gray-300 hover:text-apex-red transition-colors flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-xs text-apex-gold"></i> 比赛规则
+        </a>
+        <a href="#teams" class="text-gray-300 hover:text-apex-red transition-colors flex items-center gap-2">
+          <i class="fa-solid fa-users text-xs text-apex-accent"></i> 战队巡礼
+        </a>
+        <a href="#faq" class="text-gray-300 hover:text-apex-red transition-colors flex items-center gap-2">
+          <i class="fa-solid fa-circle-question text-xs text-gray-400"></i> FAQ
+        </a>
+      </nav>
+
+      <!-- Action Button -->
+      <div class="flex items-center space-x-4">
+        <a href="#register" class="clip-apex-btn bg-apex-red hover:bg-red-600 text-white font-bold px-5 py-2.5 text-sm uppercase tracking-wider transition-all shadow-apex-glow hover:scale-105 active:scale-95 flex items-center gap-2">
+          <i class="fa-solid fa-user-plus"></i> 立即报名
+        </a>
+        
+        <!-- Mobile menu toggle button -->
+        <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white p-2">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Menu Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-apex-border px-4 pt-2 pb-4 space-y-3">
+      <a href="#overview" class="block text-gray-300 hover:text-apex-red py-2 border-b border-gray-800">赛事指南</a>
+      <a href="#rules" class="block text-gray-300 hover:text-apex-red py-2 border-b border-gray-800">比赛规则</a>
+      <a href="#teams" class="block text-gray-300 hover:text-apex-red py-2 border-b border-gray-800">战队巡礼</a>
+      <a href="#faq" class="block text-gray-300 hover:text-apex-red py-2">FAQ 常见问题</a>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <!-- ================= HERO SECTION ================= -->
+    <section id="hero" class="relative py-16 md:py-24 overflow-hidden">
+      <!-- Background Ambient Glow -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-apex-red/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div class="absolute top-1/3 right-10 w-72 h-72 bg-apex-accent/15 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-4xl mx-auto space-y-6">
+          
+          <!-- Badges -->
+          <div class="flex flex-wrap justify-center gap-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-apex-red/10 text-apex-red border border-apex-red/30">
+              <span class="w-2 h-2 rounded-full bg-apex-red animate-ping"></span> 民间组织娱乐赛
+            </span>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-apex-accent/10 text-apex-accent border border-apex-accent/30">
+              <i class="fa-solid fa-gamepad text-xs"></i> 社区同好交流
+            </span>
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-apex-gold/10 text-apex-gold border border-apex-gold/30">
+              <i class="fa-solid fa-calendar-check text-xs"></i> 截止于 2026年10月31日
+            </span>
+          </div>
+
+          <!-- Main Title -->
+          <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white uppercase italic leading-tight">
+            2026 APEX LEGENDS<br>
+            <span class="apex-gradient-text">COMMUNITY COMPETITION</span>
+          </h1>
+
+          <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            民间同好娱乐赛！欢迎各类玩家组队竞技，争夺专属战队荣誉与社区电子奖牌！
+          </p>
+
+          <!-- Countdown & Stats Card Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto pt-4">
+            <!-- Countdown -->
+            <div class="glass-panel p-4 rounded-xl border border-apex-border flex flex-col justify-center items-center">
+              <div class="text-xs uppercase tracking-widest text-gray-400 mb-2 font-mono flex items-center gap-1">
+                <i class="fa-regular fa-clock text-apex-red"></i> 报名截止时间：2026年10月31日
+              </div>
+              <div class="flex items-center gap-3 text-2xl sm:text-3xl font-black font-mono text-white">
+                <div class="text-center"><span id="cd-days" class="text-apex-red">14</span><span class="text-xs text-gray-500 block font-sans">天</span></div>
+                <span>:</span>
+                <div class="text-center"><span id="cd-hours" class="text-apex-red">11</span><span class="text-xs text-gray-500 block font-sans">时</span></div>
+                <span>:</span>
+                <div class="text-center"><span id="cd-mins" class="text-apex-red">42</span><span class="text-xs text-gray-500 block font-sans">分</span></div>
+                <span>:</span>
+                <div class="text-center"><span id="cd-secs" class="text-apex-red">15</span><span class="text-xs text-gray-500 block font-sans">秒</span></div>
+              </div>
+            </div>
+
+            <!-- Slots Counter -->
+            <div class="glass-panel p-4 rounded-xl border border-apex-border flex flex-col justify-center items-center">
+              <div class="text-xs uppercase tracking-widest text-gray-400 mb-2 font-mono flex items-center gap-1">
+                <i class="fa-solid fa-users-between-lines text-apex-accent"></i> 战队报名名额
+              </div>
+              <div class="w-full px-4">
+                <div class="flex justify-between text-sm font-bold font-mono mb-1">
+                  <span class="text-apex-accent">已报名 <span id="team-count-display">0</span> 队</span>
+                  <span class="text-gray-400">名额无上限</span>
+                </div>
+                <div class="w-full bg-gray-800 h-3 rounded-full overflow-hidden p-0.5 border border-gray-700">
+                  <div id="team-progress-bar" class="bg-gradient-to-r from-apex-accent to-apex-red h-full rounded-full transition-all duration-500" style="width: 20%"></div>
+                </div>
+                <span class="text-[11px] text-gray-400 block text-right mt-1">欢迎战队报名加入！</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#register" class="w-full sm:w-auto clip-apex-btn bg-apex-red hover:bg-red-600 text-white font-black px-8 py-4 text-lg uppercase tracking-wider transition-all shadow-apex-glow hover:scale-105 active:scale-95 flex items-center justify-center gap-3">
+              <i class="fa-solid fa-shield-halved text-xl"></i> 立即组队报名
+            </a>
+            <a href="#overview" class="w-full sm:w-auto clip-apex-btn bg-apex-card hover:bg-apex-cardHover text-gray-200 border border-apex-border font-bold px-8 py-4 text-lg uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-scroll text-apex-gold"></i> 查看规则说明
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= OVERVIEW & RULES TABS ================= -->
+    <section id="overview" class="py-12 bg-apex-dark/80 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-black uppercase tracking-wider text-white italic">
+            <span class="text-apex-red">//</span> 赛事指南 & 积分规则
+          </h2>
+          <p class="text-gray-400 text-sm mt-2">点击切换标签了解赛制说明与参赛须知</p>
+        </div>
+
+        <!-- Tab Buttons Navigation -->
+        <div class="flex flex-wrap justify-center gap-2 border-b border-apex-border pb-4 mb-8">
+          <button onclick="switchTab('format')" id="tab-btn-format" class="tab-btn active-tab px-6 py-3 rounded-lg font-bold text-sm uppercase transition-all flex items-center gap-2 bg-apex-red text-white shadow-apex-glow">
+            <i class="fa-solid fa-gamepad"></i> 赛制与算分 (Format)
+          </button>
+          <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="tab-btn px-6 py-3 rounded-lg font-bold text-sm uppercase transition-all flex items-center gap-2 bg-apex-card text-gray-400 hover:text-white hover:bg-apex-cardHover">
+            <i class="fa-solid fa-calendar-days"></i> 日程安排 (Schedule)
+          </button>
+          <button onclick="switchTab('reqs')" id="tab-btn-reqs" class="tab-btn px-6 py-3 rounded-lg font-bold text-sm uppercase transition-all flex items-center gap-2 bg-apex-card text-gray-400 hover:text-white hover:bg-apex-cardHover">
+            <i class="fa-solid fa-list-check"></i> 参赛要求 (Rules)
+          </button>
+        </div>
+
+        <!-- Tab Contents Container -->
+        <div class="glass-panel p-6 md:p-8 rounded-2xl border border-apex-border min-h-[300px]">
+          
+          <!-- TAB 1: Format & Points -->
+          <div id="tab-content-format" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="p-4 bg-apex-card/60 rounded-xl border border-apex-border">
+                <i class="fa-solid fa-users-line text-2xl text-apex-red mb-2"></i>
+                <h3 class="font-bold text-lg text-white mb-1">三人小队 (Trios)</h3>
+                <p class="text-sm text-gray-400">比赛采用标准的 Apex 战术竞技 Trio 模式，三人组队参赛。</p>
+              </div>
+              <div class="p-4 bg-apex-card/60 rounded-xl border border-apex-border">
+                <i class="fa-solid fa-map text-2xl text-apex-accent mb-2"></i>
+                <h3 class="font-bold text-lg text-white mb-1">官方地图池轮换</h3>
+                <p class="text-sm text-gray-400">比赛采用 Apex 官方允许使用的地图池进行多轮对抗。</p>
+              </div>
+              <div class="p-4 bg-apex-card/60 rounded-xl border border-apex-border">
+                <i class="fa-solid fa-gun text-2xl text-apex-gold mb-2"></i>
+                <h3 class="font-bold text-lg text-white mb-1">击杀分 + 排名分</h3>
+                <p class="text-sm text-gray-400">采用名次积分 + 个人击杀分的综合计分方式，决出冠军战队。</p>
+              </div>
+            </div>
+
+            <!-- Scoring Table -->
+            <div id="rules" class="pt-4">
+              <h4 class="text-sm font-bold uppercase text-apex-accent mb-3 tracking-wider"><i class="fa-solid fa-table"></i> 名次积分对照表</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-2 text-center text-xs font-mono">
+                <div class="bg-apex-card p-2 rounded border border-apex-red/40"><span class="block text-gray-400">第 1 名</span><span class="font-bold text-base text-apex-red">12 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 2 名</span><span class="font-bold text-base text-white">9 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 3 名</span><span class="font-bold text-base text-white">7 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 4 名</span><span class="font-bold text-base text-white">5 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 5 名</span><span class="font-bold text-base text-white">4 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 6-7 名</span><span class="font-bold text-base text-white">3 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 8-10名</span><span class="font-bold text-base text-white">2 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 11-15名</span><span class="font-bold text-base text-white">1 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-border"><span class="block text-gray-400">第 16-20名</span><span class="font-bold text-base text-gray-500">0 分</span></div>
+                <div class="bg-apex-card p-2 rounded border border-apex-accent/40"><span class="block text-gray-400">每人头击杀</span><span class="font-bold text-base text-apex-accent">1 分</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Schedule -->
+          <div id="tab-content-schedule" class="tab-content hidden space-y-6">
+            <div class="relative border-l-2 border-apex-red/50 ml-4 pl-6 space-y-8 my-2">
+              <div class="relative">
+                <div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-apex-red border-4 border-apex-dark shadow-apex-glow"></div>
+                <span class="text-xs font-mono text-apex-red font-bold">即日起 - 2026.10.31</span>
+                <h3 class="text-lg font-bold text-white">战队组队报名阶段</h3>
+                <p class="text-sm text-gray-400">队长线上提交战队信息与选手 ID，添加组织者微信/QQ 进入赛事群。</p>
+              </div>
+              <div class="relative">
+                <div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-apex-gold border-4 border-apex-dark"></div>
+                <span class="text-xs font-mono text-apex-gold font-bold">2026.11 上旬 (具体时间群内通知)</span>
+                <h3 class="text-lg font-bold text-[#FFB800]">民间社区赛开战</h3>
+                <p class="text-sm text-gray-400">在自定义房间进行娱乐对抗，角逐社区电子奖牌与最强战队头衔。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Requirements -->
+          <div id="tab-content-reqs" class="tab-content hidden space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex items-start gap-3 p-3 bg-apex-card rounded-lg border border-apex-border">
+                <i class="fa-solid fa-gamepad text-apex-accent text-lg mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold text-white text-sm">完全支持键鼠与手柄</h4>
+                  <p class="text-xs text-gray-400">完全支持手柄玩家参赛，辅助瞄准转动比遵循 PC 赛制标准 PC AA 0.3。</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-apex-card rounded-lg border border-apex-border">
+                <i class="fa-solid fa-ban text-apex-red text-lg mt-0.5"></i>
+                <div>
+                  <h4 class="font-bold text-white text-sm">禁止外挂与违规脚本</h4>
+                  <p class="text-xs text-gray-400">严禁使用任何透视、锁头、自动打针或硬件宏等作弊行为，保持良好社区竞技风气。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= REGISTRATION FORM SECTION ================= -->
+    <section id="register" class="py-16 relative">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center mb-10">
+          <span class="text-xs font-mono text-apex-red font-bold uppercase tracking-widest">// JOIN THE COMMUNITY</span>
+          <h2 class="text-3xl sm:text-4xl font-black uppercase tracking-wider text-white italic mt-1">
+            战队报名系统
+          </h2>
+          <p class="text-gray-400 text-sm mt-2">报名时间截止至 <strong>2026年10月31日</strong>，带 <span class="text-apex-red">*</span> 为必填项</p>
+        </div>
+
+        <div class="glass-panel p-6 sm:p-10 rounded-2xl border border-apex-border shadow-2xl relative">
+          <!-- Cyber Corners for Apex Aesthetics -->
+          <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-apex-red"></div>
+          <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-apex-red"></div>
+          <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-apex-red"></div>
+          <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-apex-red"></div>
+
+          <form id="registrationForm" onsubmit="handleFormSubmit(event)" class="space-y-8">
+            
+            <!-- SECTION 1: TEAM BASIC INFO -->
+            <div>
+              <h3 class="text-lg font-bold text-white mb-4 pb-2 border-b border-apex-border flex items-center gap-2">
+                <i class="fa-solid fa-flag text-apex-red"></i> 1. 战队基本信息 (Team Info)
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1">战队全称 Team Name <span class="text-apex-red">*</span></label>
+                  <input type="text" id="teamName" required placeholder="例：快乐打靶小队" class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-apex-red transition-colors">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1">战队简称 Tag (2-5字/字母) <span class="text-apex-red">*</span></label>
+                  <input type="text" id="teamTag" required maxlength="5" placeholder="例：KLDB" class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white uppercase focus:outline-none focus:border-apex-red transition-colors">
+                </div>
+              </div>
+
+              <!-- Team Emblem Selection or Custom Upload -->
+              <div class="mt-4">
+                <label class="block text-xs font-semibold text-gray-300 mb-2">战队图标设置 Logo / Emblem (20 款预设图标可选)</label>
+                
+                <div class="space-y-3">
+                  <!-- Preset Selection Grid - 20 Icons -->
+                  <div>
+                    <span class="text-[11px] text-gray-400 block mb-1">选择预设图标：</span>
+                    <div class="grid grid-cols-5 sm:grid-cols-10 gap-2" id="emblem-selector">
+                      <div onclick="selectEmblem(this, 'fa-skull')" title="骷髅" class="emblem-option active cursor-pointer p-2.5 bg-apex-dark border-2 border-apex-red rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-skull text-xl text-apex-red"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-dragon')" title="龙" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-dragon text-xl text-apex-accent"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-shield-cat')" title="战猫" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-shield-cat text-xl text-apex-gold"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-bolt')" title="闪电" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-bolt text-xl text-purple-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-crosshairs')" title="准星" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-crosshairs text-xl text-green-400"></i>
+                      </div>
+
+                      <div onclick="selectEmblem(this, 'fa-crown')" title="皇冠" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-crown text-xl text-yellow-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-fire-flame-curved')" title="烈火" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-fire-flame-curved text-xl text-orange-500"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-gamepad')" title="手柄" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-gamepad text-xl text-indigo-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-ghost')" title="幽灵" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-ghost text-xl text-cyan-300"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-trophy')" title="奖杯" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-trophy text-xl text-amber-300"></i>
+                      </div>
+
+                      <div onclick="selectEmblem(this, 'fa-shield-halved')" title="护盾" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-shield-halved text-xl text-rose-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-rocket')" title="火箭" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-rocket text-xl text-sky-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-eye')" title="鹰眼" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-eye text-xl text-teal-300"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-skull-crossbones')" title="毒蛇/骷髅" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-skull-crossbones text-xl text-emerald-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-cat')" title="黑猫" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-cat text-xl text-pink-400"></i>
+                      </div>
+
+                      <div onclick="selectEmblem(this, 'fa-bug')" title="毒虫" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-bug text-xl text-lime-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-robot')" title="智械" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-robot text-xl text-blue-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-compass')" title="罗盘" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-compass text-xl text-fuchsia-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-headphones')" title="电竞耳机" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-headphones text-xl text-violet-400"></i>
+                      </div>
+                      <div onclick="selectEmblem(this, 'fa-bomb')" title="炸弹" class="emblem-option cursor-pointer p-2.5 bg-apex-dark border border-apex-border rounded-lg text-center hover:bg-apex-card transition-all">
+                        <i class="fa-solid fa-bomb text-xl text-red-500"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- File Upload -->
+                  <div>
+                    <span class="text-[11px] text-gray-400 block mb-1">或自主上传战队 Logo：</span>
+                    <div class="flex items-center gap-2">
+                      <input type="file" id="customLogoInput" accept="image/*" onchange="handleLogoUpload(event)" class="hidden">
+                      <button type="button" onclick="document.getElementById('customLogoInput').click()" class="bg-apex-dark border border-apex-border hover:border-apex-accent text-xs text-gray-300 px-3 py-2.5 rounded-lg flex items-center gap-2 w-full justify-center">
+                        <i class="fa-solid fa-upload text-apex-accent"></i> 上传图片 Logo
+                      </button>
+                      <div id="logoPreview" class="hidden w-9 h-9 rounded border border-apex-accent overflow-hidden flex-shrink-0">
+                        <img id="logoPreviewImg" src="" class="w-full h-full object-cover">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <input type="hidden" id="selectedEmblemIcon" value="fa-skull">
+                <input type="hidden" id="customLogoDataUrl" value="">
+              </div>
+            </div>
+
+            <!-- SECTION 2: CAPTAIN INFO -->
+            <div>
+              <h3 class="text-lg font-bold text-white mb-4 pb-2 border-b border-apex-border flex items-center justify-between">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-user-gear text-apex-accent"></i> 2. 队长 (Captain)</span>
+                <span class="text-xs font-mono text-apex-accent bg-apex-accent/10 px-2 py-0.5 rounded">队长/领队</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1">队长游戏内 ID (Origin/Steam) <span class="text-apex-red">*</span></label>
+                  <input type="text" id="cID" required placeholder="例：PlayerOne" class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-apex-accent transition-colors">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1">队长最高段位 (Highest Rank) <span class="text-apex-red">*</span></label>
+                  <select id="cRank" required class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-apex-accent transition-colors">
+                    <option value="" disabled selected>选择队长段位...</option>
+                    <option value="青铜/白银">青铜 / 白银 (Bronze / Silver)</option>
+                    <option value="黄金">黄金 (Gold)</option>
+                    <option value="白金">白金 (Platinum)</option>
+                    <option value="钻石">钻石 (Diamond)</option>
+                    <option value="大师">大师 (Master)</option>
+                    <option value="猎杀">猎杀 (Apex Predator)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1">队长微信号 WeChat <span class="text-apex-red">*</span></label>
+                  <input type="text" id="cWeChat" required placeholder="用于联系沟通与发房间密码" class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-apex-accent transition-colors">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1">队长 QQ 号码 <span class="text-apex-red">*</span></label>
+                  <input type="text" id="cQQ" required placeholder="用于紧急通知与入群" class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-apex-accent transition-colors">
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 3: TEAMMATES INFO -->
+            <div>
+              <h3 class="text-lg font-bold text-white mb-4 pb-2 border-b border-apex-border flex items-center gap-2">
+                <i class="fa-solid fa-users text-apex-gold"></i> 3. 队员信息 (Teammates)
+              </h3>
+              
+              <!-- Player 2 -->
+              <div class="p-4 bg-apex-dark/50 rounded-xl border border-apex-border/60 mb-4">
+                <div class="text-xs font-bold text-apex-gold uppercase mb-2">队员 2 信息 <span class="text-apex-red">*</span></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" id="p2ID" required placeholder="游戏内 ID *" class="w-full bg-apex-dark border border-apex-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-apex-gold">
+                  <select id="p2Rank" required class="w-full bg-apex-dark border border-apex-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-apex-gold">
+                    <option value="" disabled selected>选择最高段位...</option>
+                    <option value="青铜/白银">青铜 / 白银</option>
+                    <option value="黄金">黄金</option>
+                    <option value="白金">白金</option>
+                    <option value="钻石">钻石</option>
+                    <option value="大师">大师</option>
+                    <option value="猎杀">猎杀</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Player 3 -->
+              <div class="p-4 bg-apex-dark/50 rounded-xl border border-apex-border/60">
+                <div class="text-xs font-bold text-apex-gold uppercase mb-2">队员 3 信息 <span class="text-apex-red">*</span></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" id="p3ID" required placeholder="游戏内 ID *" class="w-full bg-apex-dark border border-apex-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-apex-gold">
+                  <select id="p3Rank" required class="w-full bg-apex-dark border border-apex-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-apex-gold">
+                    <option value="" disabled selected>选择最高段位...</option>
+                    <option value="青铜/白银">青铜 / 白银</option>
+                    <option value="黄金">黄金</option>
+                    <option value="白金">白金</option>
+                    <option value="钻石">钻石</option>
+                    <option value="大师">大师</option>
+                    <option value="猎杀">猎杀</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 4: SUBSTITUTE TOGGLE -->
+            <div>
+              <div class="flex items-center justify-between p-4 bg-apex-card rounded-xl border border-apex-border">
+                <div class="flex items-center gap-3">
+                  <i class="fa-solid fa-user-plus text-apex-accent text-xl"></i>
+                  <div>
+                    <h4 class="font-bold text-white text-sm">添加替补队员 (Optional Substitute)</h4>
+                    <p class="text-xs text-gray-400">若有备用替补可开启填写（可选 1 名）</p>
+                  </div>
+                </div>
+                <!-- Toggle Switch -->
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="subToggle" onchange="toggleSubSection()" class="sr-only peer">
+                  <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-apex-red"></div>
+                </label>
+              </div>
+
+              <!-- Sub Inputs (Hidden by default) -->
+              <div id="sub-section" class="hidden mt-4 p-4 bg-apex-dark/50 rounded-xl border border-apex-border/60">
+                <div class="text-xs font-bold text-apex-accent uppercase mb-2">替补队员 (Substitute Player)</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" id="subID" placeholder="替补游戏 ID" class="w-full bg-apex-dark border border-apex-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-apex-accent">
+                  <select id="subRank" class="w-full bg-apex-dark border border-apex-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-apex-accent">
+                    <option value="" disabled selected>选择最高段位...</option>
+                    <option value="青铜/白银">青铜 / 白银</option>
+                    <option value="黄金">黄金</option>
+                    <option value="白金">白金</option>
+                    <option value="钻石">钻石</option>
+                    <option value="大师">大师</option>
+                    <option value="猎杀">猎杀</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 5: AGREEMENT & SUBMIT -->
+            <div class="space-y-4 pt-2">
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" id="termsCheck" required class="mt-1 w-4 h-4 rounded bg-apex-dark border-apex-border text-apex-red focus:ring-apex-red">
+                <span class="text-xs text-gray-300">
+                  我已阅读并确认全队遵守社区比赛规则，无违规作弊软件使用历史。 <span class="text-apex-red">*</span>
+                </span>
+              </label>
+
+              <!-- Submit Button -->
+              <button type="submit" class="w-full clip-apex-btn bg-apex-red hover:bg-red-600 text-white font-black py-4 text-lg uppercase tracking-wider transition-all shadow-apex-glow hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> 提交报名信息 (Submit Registration)
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= LIVE REGISTERED TEAMS ROSTER ================= -->
+    <section id="teams" class="py-16 bg-apex-dark/90 border-t border-apex-border">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <span class="text-xs font-mono text-apex-accent font-bold uppercase tracking-widest">// ROSTER</span>
+            <h2 class="text-3xl font-black uppercase tracking-wider text-white italic mt-1">
+              已报名战队巡礼 (<span id="team-roster-count">0</span>)
+            </h2>
+            <p class="text-gray-400 text-sm">按实际报名提交展示已确认的战队名册</p>
+          </div>
+
+          <!-- Roster Search Filter & Admin Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <button onclick="requestClearAllTeams()" class="w-full sm:w-auto clip-apex-btn bg-red-900/80 hover:bg-red-700 text-red-200 border border-red-500/50 font-bold px-3 py-2 text-sm flex items-center justify-center gap-2 transition-all" title="仅限管理员使用的清空按钮">
+              <i class="fa-solid fa-trash-can"></i> 一键清空 (管理员)
+            </button>
+            <button onclick="exportToCSV()" class="w-full sm:w-auto clip-apex-btn bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 text-sm flex items-center justify-center gap-2 transition-all">
+              <i class="fa-solid fa-file-excel"></i> 导出 Excel/CSV (管理员)
+            </button>
+            <div class="relative w-full sm:w-72">
+              <input type="text" id="teamSearchInput" onkeyup="filterTeams()" placeholder="搜索战队名称或选手 ID..." class="w-full bg-apex-card border border-apex-border rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-apex-accent">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Cards Grid -->
+        <div id="teamsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamically populated JS cards -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= FAQ SECTION ================= -->
+    <section id="faq" class="py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-black uppercase tracking-wider text-white italic">
+            <span class="text-apex-red">//</span> 常见问题 FAQ
+          </h2>
+          <p class="text-gray-400 text-sm mt-1">遇到问题？这里有解答</p>
+        </div>
+
+        <div class="space-y-4" id="faqAccordion">
+          
+          <!-- FAQ Item 1 -->
+          <div class="glass-panel rounded-xl border border-apex-border overflow-hidden">
+            <button onclick="toggleFAQ(1)" class="w-full p-5 text-left font-bold text-white flex justify-between items-center hover:bg-apex-card/50 transition-colors">
+              <span>Q1. 本赛事是 ALGS 官方赛事吗？</span>
+              <i id="faq-icon-1" class="fa-solid fa-chevron-down text-apex-red transition-transform"></i>
+            </button>
+            <div id="faq-ans-1" class="hidden px-5 pb-5 text-xs text-gray-300 leading-relaxed border-t border-apex-border/30 pt-3">
+              本赛事为民间组织的社区娱乐活动，非 ALGS 官方认证分站赛。旨在为 Apex 爱好者提供良好的交流竞技环境。
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="glass-panel rounded-xl border border-apex-border overflow-hidden">
+            <button onclick="toggleFAQ(2)" class="w-full p-5 text-left font-bold text-white flex justify-between items-center hover:bg-apex-card/50 transition-colors">
+              <span>Q2. 报名截止时间是什么时候？</span>
+              <i id="faq-icon-2" class="fa-solid fa-chevron-down text-apex-red transition-transform"></i>
+            </button>
+            <div id="faq-ans-2" class="hidden px-5 pb-5 text-xs text-gray-300 leading-relaxed border-t border-apex-border/30 pt-3">
+              报名截止时间为 <strong>2026年10月31日 23:59</strong>。请在此之前由队长完成信息提交。
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="glass-panel rounded-xl border border-apex-border overflow-hidden">
+            <button onclick="toggleFAQ(3)" class="w-full p-5 text-left font-bold text-white flex justify-between items-center hover:bg-apex-card/50 transition-colors">
+              <span>Q3. 地图规范与手柄辅助瞄准标准是怎样的？</span>
+              <i id="faq-icon-3" class="fa-solid fa-chevron-down text-apex-red transition-transform"></i>
+            </button>
+            <div id="faq-ans-3" class="hidden px-5 pb-5 text-xs text-gray-300 leading-relaxed border-t border-apex-border/30 pt-3">
+              地图采用 Apex 官方允许使用的地图。完全支持手柄玩家参赛（辅助瞄准转动比遵循 PC 赛制标准 PC AA 0.3）。
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-black border-t border-apex-border/60 py-10 text-gray-500 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <div class="flex items-center justify-center space-x-2">
+        <div class="w-6 h-6 bg-apex-red flex items-center justify-center clip-apex-btn">
+          <i class="fa-solid fa-play text-black text-xs transform -rotate-90"></i>
+        </div>
+        <span class="text-sm font-black text-white tracking-widest uppercase">2026 APEX LEGENDS COMMUNITY COMPETITION</span>
+      </div>
+      <p class="max-w-xl mx-auto text-gray-400">
+        本比赛为民间组织娱乐赛事。所有 Apex Legends 图标与商标归 Electronic Arts Inc. 所有。
+      </p>
+      <div class="text-gray-400 font-mono">
+        © 2026 Apex Community Competition. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // System Config & Admin Settings
+    const ADMIN_PASSWORD = "xt123"; // 默认管理员密码，可更改
+    let isAdminLoggedIn = false;
+    let pendingAdminAction = null; // 'cancel', 'export', or 'clearAll'
+
+    // Initial mock data for registered teams
+    let registeredTeams = [
+      {
+        id: 'APEX-2026-X89B',
+        name: '快乐打靶小队',
+        tag: 'KLDB',
+        emblem: 'fa-skull',
+        customLogo: '',
+        captain: 'PlayerOne',
+        rank: '大师',
+        wechat: 'WX1234',
+        qq: '88888',
+        p2: 'ProGamer99 (钻石)',
+        p3: 'ApexLegend (猎杀)',
+        sub: 'BenchWarmer (黄金)',
+        registeredAt: '2026-10-15 14:20'
+      },
+      {
+        id: 'APEX-2026-99A1',
+        name: '诸王峡谷守护者',
+        tag: 'KCKS',
+        emblem: 'fa-dragon',
+        customLogo: '',
+        captain: 'WingmanMaster',
+        rank: '猎杀',
+        wechat: 'WM_999',
+        qq: '666666',
+        p2: 'FlatlineGod (大师)',
+        p3: 'R99Laser (大师)',
+        sub: '无',
+        registeredAt: '2026-10-16 09:15'
+      }
+    ];
+
+    let pendingCancelTeamId = null;
+    let currentTicketTeamId = null;
+
+    // Initialize application logic on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      startCountdown();
+      renderTeams();
+      setupMobileMenu();
+    });
+
+    // Helper: Scroll to section
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Mobile Navigation Toggle
+    function setupMobileMenu() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      if (btn && menu) {
+        btn.addEventListener('click', () => {
+          menu.classList.toggle('hidden');
+        });
+      }
+    }
+
+    // Countdown Timer logic targeting Oct 31, 2026
+    function startCountdown() {
+      const targetDate = new Date('October 31, 2026 23:59:59').getTime();
+      
+      const updateTimer = () => {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          document.getElementById('cd-days').innerText = '0';
+          document.getElementById('cd-hours').innerText = '0';
+          document.getElementById('cd-mins').innerText = '0';
+          document.getElementById('cd-secs').innerText = '0';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cd-days').innerText = days;
+        document.getElementById('cd-hours').innerText = hours;
+        document.getElementById('cd-mins').innerText = mins;
+        document.getElementById('cd-secs').innerText = secs;
+      };
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    // Tab Switching Logic
+    function switchTab(tabKey) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn px-6 py-3 rounded-lg font-bold text-sm uppercase transition-all flex items-center gap-2 bg-apex-card text-gray-400 hover:text-white hover:bg-apex-cardHover';
+      });
+
+      const activeContent = document.getElementById(`tab-content-${tabKey}`);
+      const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+
+      if (activeContent) activeContent.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn active-tab px-6 py-3 rounded-lg font-bold text-sm uppercase transition-all flex items-center gap-2 bg-apex-red text-white shadow-apex-glow';
+      }
+    }
+
+    // Emblem Selection Handler
+    function selectEmblem(element, iconClass) {
+      document.querySelectorAll('.emblem-option').forEach(opt => {
+        opt.classList.remove('border-2', 'border-apex-red', 'active');
+        opt.classList.add('border', 'border-apex-border');
+      });
+
+      element.classList.remove('border-apex-border');
+      element.classList.add('border-2', 'border-apex-red', 'active');
+      
+      document.getElementById('selectedEmblemIcon').value = iconClass;
+      document.getElementById('customLogoDataUrl').value = ''; 
+      document.getElementById('logoPreview').classList.add('hidden');
+    }
+
+    // Custom Logo File Upload Handler
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('customLogoDataUrl').value = e.target.result;
+          document.getElementById('logoPreviewImg').src = e.target.result;
+          document.getElementById('logoPreview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Substitute Toggle Handler
+    function toggleSubSection() {
+      const checkBox = document.getElementById('subToggle');
+      const subSec = document.getElementById('sub-section');
+      if (checkBox.checked) {
+        subSec.classList.remove('hidden');
+      } else {
+        subSec.classList.add('hidden');
+      }
+    }
+
+    // Form Submission Handler
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const teamName = document.getElementById('teamName').value.trim();
+      const teamTag = document.getElementById('teamTag').value.trim().toUpperCase();
+      const selectedEmblem = document.getElementById('selectedEmblemIcon').value;
+      const customLogo = document.getElementById('customLogoDataUrl').value;
+      
+      const captainID = document.getElementById('cID').value.trim();
+      const captainRank = document.getElementById('cRank').value;
+      const captainWeChat = document.getElementById('cWeChat').value.trim();
+      const captainQQ = document.getElementById('cQQ').value.trim();
+
+      const p2ID = document.getElementById('p2ID').value.trim();
+      const p2Rank = document.getElementById('p2Rank').value;
+      const p3ID = document.getElementById('p3ID').value.trim();
+      const p3Rank = document.getElementById('p3Rank').value;
+
+      const subToggle = document.getElementById('subToggle').checked;
+      const subID = document.getElementById('subID').value.trim();
+      const subRank = document.getElementById('subRank').value;
+
+      const regID = 'APEX-2026-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+
+      const newTeam = {
+        id: regID,
+        name: teamName,
+        tag: teamTag,
+        emblem: selectedEmblem,
+        customLogo: customLogo,
+        captain: captainID,
+        rank: captainRank,
+        wechat: captainWeChat,
+        qq: captainQQ,
+        p2: `${p2ID} (${p2Rank})`,
+        p3: `${p3ID} (${p3Rank})`,
+        sub: subToggle && subID ? `${subID} (${subRank || '未选择'})` : '无',
+        registeredAt: new Date().toLocaleString('zh-CN')
+      };
+
+      registeredTeams.unshift(newTeam);
+      renderTeams();
+
+      showTicket(newTeam);
+
+      document.getElementById('registrationForm').reset();
+      document.getElementById('sub-section').classList.add('hidden');
+      document.getElementById('logoPreview').classList.add('hidden');
+    }
+
+    // Show Printable Ticket Modal
+    function showTicket(team) {
+      currentTicketTeamId = team.id;
+      document.getElementById('ticketID').innerText = team.id;
+      document.getElementById('ticketTeamTag').innerText = `[${team.tag}]`;
+      document.getElementById('ticketTeamName').innerText = team.name;
+      document.getElementById('ticketCaptain').innerText = `${team.captain} (${team.rank})`;
+      document.getElementById('ticketContact').innerText = `WX: ${team.wechat} / QQ: ${team.qq}`;
+
+      const rosterContainer = document.getElementById('ticketRoster');
+      rosterContainer.innerHTML = `
+        <div>• 队长: ${team.captain} (${team.rank})</div>
+        <div>• 队员2: ${team.p2}</div>
+        <div>• 队员3: ${team.p3}</div>
+        <div>• 替补: ${team.sub}</div>
+      `;
+
+      document.getElementById('ticketModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('ticketModal').classList.add('hidden');
+      currentTicketTeamId = null;
+    }
+
+    // Trigger Admin Verification for Cancel/Remove Action
+    function requestCancelRegistration(teamId) {
+      pendingCancelTeamId = teamId;
+      pendingAdminAction = 'cancel';
+      if (isAdminLoggedIn) {
+        confirmAndExecuteCancel();
+      } else {
+        openAdminAuthModal();
+      }
+    }
+
+    // Trigger Admin Verification for Clearing All Registrations
+    function requestClearAllTeams() {
+      pendingAdminAction = 'clearAll';
+      if (isAdminLoggedIn) {
+        confirmAndExecuteClearAll();
+      } else {
+        openAdminAuthModal();
+      }
+    }
+
+    // Admin Auth Modal Trigger
+    function openAdminAuthModal() {
+      document.getElementById('adminPasswordInput').value = '';
+      document.getElementById('adminAuthError').classList.add('hidden');
+      document.getElementById('adminAuthModal').classList.remove('hidden');
+    }
+
+    function closeAdminAuthModal() {
+      document.getElementById('adminAuthModal').classList.add('hidden');
+      pendingCancelTeamId = null;
+      pendingAdminAction = null;
+    }
+
+    function verifyAdminPassword() {
+      const pwd = document.getElementById('adminPasswordInput').value;
+      if (pwd === ADMIN_PASSWORD) {
+        isAdminLoggedIn = true;
+        closeAdminAuthModal();
+        
+        if (pendingAdminAction === 'cancel' && pendingCancelTeamId) {
+          confirmAndExecuteCancel();
+        } else if (pendingAdminAction === 'clearAll') {
+          confirmAndExecuteClearAll();
+        } else if (pendingAdminAction === 'export') {
+          exportToCSV();
+        }
+      } else {
+        document.getElementById('adminAuthError').classList.remove('hidden');
+      }
+    }
+
+    function confirmAndExecuteCancel() {
+      if (!pendingCancelTeamId) return;
+      const teamIdx = registeredTeams.findIndex(t => t.id === pendingCancelTeamId);
+      if (teamIdx !== -1) {
+        registeredTeams.splice(teamIdx, 1);
+        renderTeams();
+        if (currentTicketTeamId === pendingCancelTeamId) {
+          closeModal();
+        }
+      }
+      pendingCancelTeamId = null;
+      pendingAdminAction = null;
+    }
+
+    function confirmAndExecuteClearAll() {
+      if (registeredTeams.length === 0) return;
+      registeredTeams = [];
+      renderTeams();
+      closeModal();
+      pendingAdminAction = null;
+    }
+
+    // Render Live Registered Teams
+    function renderTeams(filterKeyword = '') {
+      const container = document.getElementById('teamsGrid');
+      container.innerHTML = '';
+
+      const filtered = registeredTeams.filter(t => {
+        const kw = filterKeyword.toLowerCase();
+        return t.name.toLowerCase().includes(kw) || 
+               t.tag.toLowerCase().includes(kw) || 
+               t.captain.toLowerCase().includes(kw) ||
+               t.p2.toLowerCase().includes(kw) ||
+               t.p3.toLowerCase().includes(kw);
+      });
+
+      document.getElementById('team-count-display').innerText = registeredTeams.length;
+      document.getElementById('team-roster-count').innerText = registeredTeams.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 text-gray-500 font-mono">
+            <i class="fa-solid fa-ghost text-3xl mb-2 block text-gray-600"></i>
+            暂无匹配的战队报名记录
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(team => {
+        const card = document.createElement('div');
+        card.className = 'glass-panel p-5 rounded-xl border border-apex-border hover:border-apex-red/50 transition-all flex flex-col justify-between relative overflow-hidden group';
+
+        const emblemHtml = team.customLogo 
+          ? `<img src="${team.customLogo}" class="w-10 h-10 rounded object-cover border border-apex-accent">`
+          : `<div class="w-10 h-10 bg-apex-dark border border-apex-border rounded flex items-center justify-center text-apex-red text-xl"><i class="fa-solid ${team.emblem}"></i></div>`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between border-b border-apex-border/50 pb-3 mb-3">
+              <div class="flex items-center gap-3">
+                ${emblemHtml}
+                <div>
+                  <h3 class="font-bold text-white text-base leading-tight group-hover:text-apex-red transition-colors">[${team.tag}] ${team.name}</h3>
+                  <span class="text-[10px] font-mono text-gray-400">${team.id}</span>
+                </div>
+              </div>
+              <span class="text-xs px-2 py-0.5 rounded bg-apex-red/10 text-apex-red font-mono border border-apex-red/30">${team.rank}</span>
+            </div>
+
+            <div class="space-y-1.5 text-xs font-mono">
+              <div class="flex justify-between text-gray-300">
+                <span class="text-gray-500">队长:</span>
+                <span class="font-bold text-white">${team.captain}</span>
+              </div>
+              <div class="flex justify-between text-gray-300">
+                <span class="text-gray-500">队员2:</span>
+                <span>${team.p2}</span>
+              </div>
+              <div class="flex justify-between text-gray-300">
+                <span class="text-gray-500">队员3:</span>
+                <span>${team.p3}</span>
+              </div>
+              ${team.sub !== '无' ? `
+              <div class="flex justify-between text-apex-accent">
+                <span class="text-gray-500">替补:</span>
+                <span>${team.sub}</span>
+              </div>` : ''}
+            </div>
+          </div>
+
+          <div class="mt-4 pt-2 border-t border-apex-border/30 flex justify-between items-center text-[10px] text-gray-500 font-mono">
+            <span>报名时间: ${team.registeredAt}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> 已确认</span>
+              <button onclick="requestCancelRegistration('${team.id}')" title="管理员取消此战队报名" class="text-gray-500 hover:text-apex-red transition-colors ml-1 px-1.5 py-0.5 border border-gray-700 hover:border-apex-red rounded flex items-center gap-1">
+                <i class="fa-solid fa-lock text-[9px]"></i> 取消
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Filter Teams
+    function filterTeams() {
+      const val = document.getElementById('teamSearchInput').value;
+      renderTeams(val);
+    }
+
+    // Export to CSV with Admin Password Guard
+    function exportToCSV() {
+      if (!isAdminLoggedIn) {
+        pendingAdminAction = 'export';
+        openAdminAuthModal();
+        return;
+      }
+
+      if (registeredTeams.length === 0) {
+        return;
+      }
+
+      let csvContent = "\uFEFF"; 
+      csvContent += "Registration ID,Team Tag,Team Name,Captain ID,Captain Rank,WeChat,QQ,Player 2,Player 3,Substitute,Registered At\n";
+
+      registeredTeams.forEach(t => {
+        const row = [
+          `"${t.id}"`,
+          `"${t.tag}"`,
+          `"${t.name}"`,
+          `"${t.captain}"`,
+          `"${t.rank}"`,
+          `"${t.wechat}"`,
+          `"${t.qq}"`,
+          `"${t.p2}"`,
+          `"${t.p3}"`,
+          `"${t.sub}"`,
+          `"${t.registeredAt}"`
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `APEX_2026_Teams_Export_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // FAQ Toggle Handler
+    function toggleFAQ(index) {
+      const ans = document.getElementById(`faq-ans-${index}`);
+      const icon = document.getElementById(`faq-icon-${index}`);
+
+      if (ans.classList.contains('hidden')) {
+        ans.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        ans.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+  </script>
+
+  <!-- ================= ADMIN AUTHENTICATION MODAL ================= -->
+  <div id="adminAuthModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative w-full max-w-md bg-apex-card border-2 border-apex-red rounded-2xl p-6 shadow-apex-glow clip-apex-card">
+      <button onclick="closeAdminAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-4">
+        <div class="w-12 h-12 bg-apex-red/20 border border-apex-red rounded-full flex items-center justify-center mx-auto text-apex-red text-2xl">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-black text-white uppercase italic">赛事管理员身份验证</h3>
+          <p class="text-xs text-gray-400 mt-1">此敏感操作（如撤销报名/导出表格）仅限赛事组织者管理员操作</p>
+        </div>
+
+        <div class="space-y-3 text-left">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">请输入管理员密钥 (Admin Password)</label>
+            <input type="password" id="adminPasswordInput" placeholder="请输入管理员密码" class="w-full bg-apex-dark border border-apex-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-apex-red">
+          </div>
+          <div id="adminAuthError" class="hidden text-xs text-apex-red font-semibold flex items-center gap-1">
+            <i class="fa-solid fa-circle-exclamation"></i> 密码错误，鉴权失败！
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button onclick="closeAdminAuthModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2.5 rounded-lg text-xs transition-all">
+            取消
+          </button>
+          <button onclick="verifyAdminPassword()" class="flex-1 clip-apex-btn bg-apex-red hover:bg-red-600 text-white font-bold py-2.5 text-xs uppercase tracking-wider transition-all">
+            确认验证
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SUCCESS TICKET MODAL ================= -->
+  <div id="ticketModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    
+    <div class="relative w-full max-w-lg bg-apex-card border-2 border-apex-red rounded-2xl p-6 sm:p-8 shadow-apex-glow clip-apex-card animate-bounce-short">
+      
+      <!-- Close Button -->
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-4">
+        <div class="w-16 h-16 bg-apex-red/20 border-2 border-apex-red rounded-full flex items-center justify-center mx-auto text-apex-red text-3xl">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div>
+          <span class="text-xs font-mono text-apex-accent uppercase tracking-widest">REGISTRATION SUCCESSFUL</span>
+          <h3 class="text-2xl font-black text-white uppercase italic">战队报名成功凭证</h3>
+        </div>
+
+        <!-- Ticket Design Card -->
+        <div id="printableTicket" class="bg-apex-dark border border-apex-border p-5 rounded-xl text-left space-y-3 relative overflow-hidden">
+          <div class="flex justify-between items-center border-b border-apex-border/60 pb-3">
+            <div>
+              <span class="text-[10px] text-gray-400 font-mono block">REGISTRATION NO.</span>
+              <span id="ticketID" class="text-sm font-mono font-bold text-apex-red">APEX-2026-X89B</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-gray-400 font-mono block">TEAM TAG</span>
+              <span id="ticketTeamTag" class="text-sm font-mono font-bold text-apex-gold">[KLDB]</span>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-xs text-gray-400">战队名称:</span>
+            <div id="ticketTeamName" class="text-lg font-black text-white">快乐打靶小队</div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+            <div>
+              <span class="text-gray-400">队长 ID:</span>
+              <span id="ticketCaptain" class="text-white font-bold ml-1">PlayerOne</span>
+            </div>
+            <div>
+              <span class="text-gray-400">微信/QQ:</span>
+              <span id="ticketContact" class="text-apex-accent font-mono ml-1">WX1234 / 88888</span>
+            </div>
+          </div>
+
+          <div class="text-xs pt-1 border-t border-apex-border/40">
+            <span class="text-gray-400 block mb-1">小队阵容:</span>
+            <div id="ticketRoster" class="text-gray-300 font-mono text-[11px] space-y-0.5">
+              <!-- JS Populated -->
+            </div>
+          </div>
+
+          <!-- QR Code Area for Player Group -->
+          <div class="mt-4 pt-3 border-t border-dashed border-apex-border flex items-center justify-between bg-apex-card/50 p-3 rounded-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-16 h-16 bg-white p-0.5 rounded flex-shrink-0 flex items-center justify-center border border-apex-accent shadow overflow-hidden relative group">
+                <img src="file:///C:/Users/xt/Desktop/Gemini_Generated_Image_gkk9bwgkk9bwgkk9.jpg" 
+                     alt="赛前交流群二维码" 
+                     onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=APEX-2026-COMMUNITY';"
+                     class="w-full h-full object-cover rounded-sm">
+              </div>
+              <div class="text-[11px] text-gray-300 space-y-0.5">
+                <span class="font-bold text-white block">扫码加入选手赛前交流群</span>
+                <span class="text-gray-400 block text-[10px]">请队长保存此凭证截图</span>
+                <span class="text-apex-accent font-mono text-[10px]">群验证码: 2026-APEX</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons inside Modal -->
+        <div class="flex gap-3 pt-2">
+          <button onclick="closeModal()" class="w-full clip-apex-btn bg-apex-red text-white font-bold py-2.5 text-xs uppercase tracking-wider">
+            确认并关闭凭证
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
