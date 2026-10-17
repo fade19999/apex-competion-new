@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN" class="scroll-smooth">
 <head>
@@ -322,10 +323,20 @@
                 <div class="flex justify-between text-xs"><span class="text-gray-500">战队名称:</span><span id="modal-team" class="text-white">--</span></div>
                 <div class="flex justify-between text-xs"><span class="text-gray-500">队长联系方式:</span><span id="modal-contact" class="text-white">--</span></div>
             </div>
-            <div class="bg-white p-4 w-32 h-32 mx-auto flex items-center justify-center clip-corner-sm">
-                <!-- 模拟二维码 -->
-                <i class="fa-solid fa-qrcode text-7xl text-black"></i>
+            
+            <!-- 二维码设计区：包含本地绝对路径图片集成与高科技框体 -->
+            <div class="relative group max-w-[180px] mx-auto">
+                <div class="bg-[#0b0f19] p-3 border-2 border-[#FF4B1F] clip-corner-sm shadow-lg shadow-orange-600/20">
+                    <img 
+                        src="file:///C:/Users/xt/Desktop/Gemini_Generated_Image_gkk9bwgkk9bwgkk9.jpg" 
+                        alt="赛事凭证二维码" 
+                        class="w-full h-auto object-cover rounded clip-corner-sm block"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-36 h-36 bg-white flex items-center justify-center text-black clip-corner-sm\'><i class=\'fa-solid fa-qrcode text-7xl\'></i></div>';"
+                    >
+                </div>
+                <span class="text-[9px] text-orange-400 font-mono tracking-widest block mt-2">OFFICIAL COMPETITION QR CODE</span>
             </div>
+
             <p class="text-[10px] text-gray-500 font-mono">赛事群或签到时请出示此编号或电子凭证画面。</p>
             <button onclick="closeCredentialModal()" class="w-full bg-[#FF4B1F] text-black font-orbitron font-bold py-2.5 clip-corner">
                 完成并返回大厅
