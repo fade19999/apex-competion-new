@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2026 APEX LEGENDS COMMUNITY COMPETITION - 民间娱乐赛</title>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -710,7 +712,157 @@
   </footer>
 
   <script>
-    // System Config & Admin Settings
+// ================= SUPABASE 配置 =================
+const SUPABASE_URL = 'https://idnhrchopndckusywife.supabase.co'; // 替换为你的 Supabase 项目 URL
+const SUPABASE_ANON_KEY = 'sb_publishable_l2EhbnU2dZMmv9MB_Shc8w_jDfngtug'; // 替换为你的 Supabase Anon Key
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let registeredTeams = []; // 后续由云端动态拉取
+
+// 页面加载时拉取云端数据，并开启实时监听
+document.addEventListener('DOMContentLoaded', () => {
+  startCountdown();
+  fetchTeamsFromCloud();
+  setupRealtimeSubscription();
+  setupMobileMenu();
+});
+
+// 从云端数据库加载战队
+async function fetchTeamsFromCloud() {
+  const { data, error } = await supabase
+    .from('teams')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('获取战队数据失败:', error);
+    return;
+  }
+  
+  registeredTeams = data.map(t => ({
+    id: t.id,
+    name: t.name,
+    tag: t.tag,
+    emblem: t.emblem,
+    customLogo: t.custom_logo,
+    captain: t.captain,
+    rank: t.rank,
+    wechat: t.wechat,
+    qq: t.qq,
+    p2: t.p2,
+    p3: t.p3,
+    sub: t.sub,
+    registeredAt: t.registered_at
+  }));
+  renderTeams();
+}
+
+// 开启实时同步监听（当其他用户提交时，本页面会自动无刷新更新！）
+function setupRealtimeSubscription() {
+  supabase
+    .channel('public:teams')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, payload => {
+      console.log('检测到云端数据变动，正在同步...', payload);
+      fetchTeamsFromCloud(); // 重新拉取最新列表并渲染
+    })
+    .subscribe();
+}
+
+// 改写表单提交：存入云端数据库
+async function handleFormSubmit(event) {
+  event.preventDefault();
+
+  const teamName = document.getElementById('teamName').value.trim();
+  const teamTag = document.getElementById('teamTag').value.trim().toUpperCase();
+  const selectedEmblem = document.getElementById('selectedEmblemIcon').value;
+  const customLogo = document.getElementById('customLogoDataUrl').value;
+  
+  const captainID = document.getElementById('cID').value.trim();
+  const captainRank = document.getElementById('cRank').value;
+  const captainWeChat = document.getElementById('cWeChat').value.trim();
+  const captainQQ = document.getElementById('cQQ').value.trim();
+
+  const p2ID = document.getElementById('p2ID').value.trim();
+  const p2Rank = document.getElementById('p2Rank').value;
+  const p3ID = document.getElementById('p3ID').value.trim();
+  const p3Rank = document.getElementById('p3Rank').value;
+
+  const subToggle = document.getElementById('subToggle').checked;
+  const subID = document.getElementById('subID').value.trim();
+  const subRank = document.getElementById('subRank').value;
+
+  const regID = 'APEX-2026-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+  const registeredAtStr = new Date().toLocaleString('zh-CN');
+
+  const newTeamData = {
+    id: regID,
+    name: teamName,
+    tag: teamTag,
+    emblem: selectedEmblem,
+    custom_logo: customLogo,
+    captain: captainID,
+    rank: captainRank,
+    wechat: captainWeChat,
+    qq: captainQQ,
+    p2: `${p2ID} (${p2Rank})`,
+    p3: `${p3ID} (${p3Rank})`,
+    sub: subToggle && subID ? `${subID} (${subRank || '未选择'})` : '无',
+    registered_at: registeredAtStr
+  };
+
+  // 写入 Supabase 云端数据库
+  const { error } = await supabase.from('teams').insert([newTeamData]);
+
+  if (error) {
+    alert('报名提交到云端失败，请检查网络或配置：' + error.message);
+    return;
+  }
+
+  // 本地展示成功凭证
+  const localTeamObj = {
+    ...newTeamData,
+    customLogo: newTeamData.custom_logo,
+    registeredAt: newTeamData.registered_at
+  };
+  showTicket(localTeamObj);
+
+  document.getElementById('registrationForm').reset();
+  document.getElementById('sub-section').classList.add('hidden');
+  document.getElementById('logoPreview').classList.add('hidden');
+}
+
+// 改写管理员删除单支战队
+async function confirmAndExecuteCancel() {
+  if (!pendingCancelTeamId) return;
+  
+  const { error } = await supabase
+    .from('teams')
+    .delete()
+    .eq('id', pendingCancelTeamId);
+
+  if (error) {
+    alert('删除失败: ' + error.message);
+    return;
+  }
+
+  pendingCancelTeamId = null;
+  pendingAdminAction = null;
+}
+
+// 改写管理员一键清空所有战队
+async function confirmAndExecuteClearAll() {
+  const { error } = await supabase
+    .from('teams')
+    .delete()
+    .neq('id', ''); // 删除所有记录
+
+  if (error) {
+    alert('清空失败: ' + error.message);
+    return;
+  }
+  closeModal();
+  pendingAdminAction = null;
+}    // System Config & Admin Settings
     const ADMIN_PASSWORD = "xt123"; // 默认管理员密码，可更改
     let isAdminLoggedIn = false;
     let pendingAdminAction = null; // 'cancel', 'export', or 'clearAll'
